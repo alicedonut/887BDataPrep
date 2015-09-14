@@ -28,7 +28,7 @@ skip_second_Demog <- all_content_Demog[-2] # removes second line with unneeded q
 demog887B <- read.csv(textConnection(skip_second_Demog), header = TRUE, stringsAsFactors = FALSE) # creates new object from the csv file, which has the second line removed
 
 # this uses the rename function in the plyr package to rename the variables
-demog887B <- rename(demog887B, c("Q1"="gender",
+demog887B <- rename(demog887B, c("Q1"="genderM1F0",
                                  "Q2"="age",
                                  "Q3_1"="emp_FT",
                                  "Q3_2"="emp_Casual",
@@ -60,7 +60,7 @@ demog887B <- rename(demog887B, c("Q1"="gender",
 # setnames(demog887B, c("Q1", "Q2", "Q3_1"), c("gender", "Age", "Emp_FT")) # uses setnames function from data.table package to reassign names in a similar way as rename function above but with slightly different syntax
 
 
-colsToKeep <- c("gender", 
+colsToKeep <- c("genderM1F0", 
   "age",
   "emp_FT",
   "emp_Casual",
@@ -212,38 +212,38 @@ CWSQ887B$V8 = parse_date_time(CWSQ887B$V8, "%Y%m%d %H%M%S") # this is a function
 
 # vector of names for each CWSQ item
 
-CWSQN <- c("Drowsy",
-           "SelfConfident",
-           "Yawning",
-           "Alert",
-           "TiredFatigued",
-           "Content",
-           "DiffConc",
-           "Irritable",
-           "HeavyFeel",
-           "DepressedMood",
-           "Grouchy",
-           "UrgeWork",
-           "FluLikeFeel",
-           "Headache",
-           "Talkative",
-           "Sluggish",
-           "UpsetStomach",
-           "Clearheaded",
-           "DesireSoc",
-           "Energetic",
-           "NauseaVom",
-           "MusclePain",
-           "Discouraged",
-           "Queasy",
-           "Nauseaous",
-           "Vomiting",
-           "Headachey",
-           "Anxious",
-           "Nervous",
-           "Jittery",
-           "CravingCoffee",
-           "CravingCaffeine",
+CWSQN <- c("drowsy",
+           "selfconfident",
+           "yawning",
+           "alert",
+           "tiredfatigued",
+           "content",
+           "diffconc",
+           "irritable",
+           "heavyfeel",
+           "depressedmood",
+           "grouchy",
+           "urgework",
+           "flulike",
+           "headache",
+           "talkative",
+           "sluggish",
+           "upsetstomach",
+           "clearheaded",
+           "desiresoc",
+           "energetic",
+           "nauseavom",
+           "musclepain",
+           "discouraged",
+           "queasy",
+           "nauseaous",
+           "vomiting",
+           "headachey",
+           "anxious",
+           "nervous",
+           "jittery",
+           "cravingcoffee",
+           "cravingcaffeine",
            "email")
 
 
@@ -253,7 +253,7 @@ CWSQ887Names <- paste("Q", 1:33, CWSQN, sep="")
 # change the relevant columns, which now have column names as you want them to appear in the composite file
 setnames(CWSQ887B, paste("Q", 2:34, sep=""), CWSQ887Names)
 
-setnames(CWSQ887B, "V8", "testTime") # changes the name of the data column used to sort the rows for each participant into chronological order to something more intuitive than V8
+setnames(CWSQ887B, "V8", "testtime") # changes the name of the data column used to sort the rows for each participant into chronological order to something more intuitive than V8
 
 
 ######################## removing unwanted columns. This can only be done using column numbers. But with the data.table package we can do it using names instead, which is always better.
@@ -299,7 +299,7 @@ CWSQ887B <- ddply(CWSQ887B, # specifies data frame we are looking at
                   "substr_ID", # specifies the variable which we will be subsetting by
                   
                   function(sub_rows) { # creates a function called sub_rows to apply to each subset within the id_code column of the dataframe CWSQ887B. Here the 'sub-rows' argument stands in for the dataframe CWSQ887B
-  sub_rows$survey_num <- order(sub_rows$testTime) # creates a new column called survey_num in which each row is an order number for the place of that row within each subset of the 'id_code' column. The order numbers in this case are assigned based on the criteria 'date-time in column V8 of dataframe CWSQ887B' (Remember above on line 29 we specified this column as a date-time)
+  sub_rows$survey_num <- order(sub_rows$testtime) # creates a new column called survey_num in which each row is an order number for the place of that row within each subset of the 'id_code' column. The order numbers in this case are assigned based on the criteria 'date-time in column V8 of dataframe CWSQ887B' (Remember above on line 29 we specified this column as a date-time)
   return(sub_rows) # returns the newly augmented CWSQ887B
                   }
 )
@@ -311,13 +311,13 @@ CWSQ887B <- ddply(CWSQ887B, # specifies data frame we are looking at
 CWSQ887B$SurveyCode <- mapvalues(
   CWSQ887B$survey_num,
   from=c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11),
-  to=c("QB1", "QB2", "QT1", "QT2", "QT3", "QT4", "QT5", "QT6", "QT7", "QT8", "QT9"),
+  to=c("B1", "B2", "T1", "T2", "T3", "T4", "T5", "T6", "T7", "T8", "T9"),
   warn_missing=TRUE
 )
 
 # Check that everything looks sensible
 
-head(CWSQ887B[, c("substr_ID", "testTime", "survey_num", "SurveyCode")])
+head(CWSQ887B[, c("substr_ID", "testtime", "survey_num", "SurveyCode")])
 
 # get rid of superfluous numbered surveynumber (this role now filled by Survey_Code) and email columns
 survNumEmail <- c("survey_num", "Q33email")
@@ -328,6 +328,8 @@ CWSQ887B <- CWSQ887B[, -which(names(CWSQ887B) %in% survNumEmail)]
 # Go from long to wide, using the survey code as the suffix for each variable
 
 CWSQ887B_reshaped <- reshape(CWSQ887B, idvar="substr_ID", timevar="SurveyCode", direction="wide", sep = "") # you might want to order the column-naming convention here so that the test name (e.g. QB1, QB2, QT1 etc) comes first followed by the 
+
+
 
 
 
@@ -429,6 +431,24 @@ nrow(compiledMaster)
 compiledMaster$substr_ID
 
 write.csv (compiledMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/compiledMaster.csv")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

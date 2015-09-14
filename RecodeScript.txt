@@ -4,7 +4,7 @@ source("~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_F
 
 # Recoding values from the qualtrics questionnaires.
 
-### Exit Quesitonnaire is first
+############################# 1. Exit Quesitonnaire is first ##################################
 
 # compliance with baseline
 
@@ -21,6 +21,8 @@ compiledMaster$ProcedureDiffered_Y1N0 <- mapvalues(compiledMaster$ProcedureDiffe
 # Do you think the true dose differed?
 
 compiledMaster$TrueDoseDiffered_Y1N0 <- mapvalues(compiledMaster$TrueDoseDiffered_Y1N0, from = c(2,1), to = c(0,1))
+
+######################## 2. Demographics Questionnaire #######################################
 
 # gender 
 
@@ -77,7 +79,7 @@ compiledMaster$energyDrinksEveryday <- mapvalues(compiledMaster$energyDrinksEver
 compiledMaster$energyDrinksEveryday <- factor(compiledMaster$energyDrinksEveryday, levels = c(0,1), labels = c("No", "Yes"), ordered = FALSE)
 
 
-######## Expectancy questionnaire
+############################## 3. Expectancy questionnaire ###################################
 
 # what form of caffeine answers pertain to
 
@@ -98,3 +100,7 @@ for (col_name in colsToRecodeExp) { #for each column name in the vector 'cols_to
 View(compiledMaster)
 
 write.csv(compiledMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/compiledMaster_Final.csv")
+
+################ 4. CWSQ Questionnaire #################################
+
+
