@@ -419,7 +419,7 @@ Exit887B <- Exit887B[, -which(names(Exit887B) %in% "email")]
 
 ###################################### Solution 1 ##############################################
 
-MasterList <- list(master887B, demog887B, EQ887B, CWSQ887B_reshaped, Exit887B)
+MasterList <- list(master887B, Exit887B, demog887B, EQ887B, CWSQ887B_reshaped)
 
 
 compiledMaster <- Reduce( function (...) merge(..., by = "substr_ID", all = F), MasterList)
@@ -429,19 +429,6 @@ nrow(compiledMaster)
 compiledMaster$substr_ID
 
 write.csv (compiledMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/compiledMaster.csv")
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
