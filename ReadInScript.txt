@@ -330,6 +330,15 @@ CWSQ887B <- CWSQ887B[, -which(names(CWSQ887B) %in% survNumEmail)]
 CWSQ887B_reshaped <- reshape(CWSQ887B, idvar="substr_ID", timevar="SurveyCode", direction="wide", sep = "") # you might want to order the column-naming convention here so that the test name (e.g. QB1, QB2, QT1 etc) comes first followed by the 
 
 
+# Giving columns proper names with Day/Test number as prefix
+
+CWSQ887BNames <- colnames(CWSQ887B_reshaped[, 3:364])
+
+CWSQ887BNames_re <- gsub("(.*)([A-Z][0-9])$", "\\2\\1", CWSQ887BNames)
+
+setnames(CWSQ887B_reshaped, colnames(CWSQ887B_reshaped[,3:364]), CWSQ887BNames_re)
+
+
 
 
 
@@ -431,6 +440,7 @@ nrow(compiledMaster)
 compiledMaster$substr_ID
 
 write.csv (compiledMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/compiledMaster.csv")
+
 
 
 

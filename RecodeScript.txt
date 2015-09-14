@@ -87,6 +87,57 @@ compiledMaster$EQformOfCaffeine <- factor(compiledMaster$EQformOfCaffeine, level
 
 # recoding items of EQ questionnaire
 
+colsToRecodeExp <-  c("EQformOfCaffeine",
+                   "EQformOfCaffeine_TEXT",
+                   "EQ1_PicksMeUp",
+                   "EQ2_BetterConvers",
+                   "EQ3_HelpsAvoidEating",
+                   "EQ4_CaffMakesStress",
+                   "EQ5_CaffImprovesAthl",
+                   "EQ6_CaffLessSleepy",
+                   "EQ7_CaffSuppressHunger",
+                   "EQ8_NoCaffMakesMiser",
+                   "EQ9_CaffImproveMood",
+                   "EQ10_NoCaffAnxious",
+                   "EQ11_CaffMakesJittery",
+                   "EQ12_CaffMakesWorkoutsBetter",
+                   "EQ13_NoCaffMakesWithdrawal",
+                   "EQ14_DontLikeCaffFeel",
+                   "EQ15_NoCaffFeelSick",
+                   "EQ16_CaffIncreaseMotiv",
+                   "EQ17_CaffMoreConf",
+                   "EQ18_CaffThrowsSleep",
+                   "EQ19_CaffMakesNervous",
+                   "EQ20_CaffMakesAlert",
+                   "EQ21_CaffSmallMakesAnxious",
+                   "EQ22_CaffImproveConc",
+                   "EQ23_CaffMakesFriendly",
+                   "EQ24_NoCaffNeedCaffDaily",
+                   "EQ25_CaffMakesSweat",
+                   "EQ26_CaffAllowsMealSkipping",
+                   "EQ27_NoCaffMakesDesire",
+                   "EQ28_CaffMakesDifficult",
+                   "EQ29_CaffMakesIrritable",
+                   "EQ30_CaffHelpsMeWork",
+                   "EQ31_CaffMakesHappy",
+                   "EQ32_NoCaffNoFunction",
+                   "EQ33_CaffMakesIrregularHeartbeat",
+                   "EQ34_OftenCraveCaff",
+                   "EQ35_NoCaffTroubleStartingDay",
+                   "EQ36_CaffUpsetsStomach",
+                   "EQ37_TroubleGivingUpCaff",
+                   "EQ38_CaffLateDisruptsSleep",
+                   "EQ39_CaffHelpsControlWeight",
+                   "EQ40_NoCaffMakesHeadache",
+                   "EQ41_CaffImprovesAttention",
+                   "EQ42_CaffMakesSociable",
+                   "EQ43_CaffMakesExerciseLonger",
+                   "EQ44_CaffHelpsMeGetThroughDay",
+                   "EQ45_CaffMakesMoreEnergy",
+                   "EQ46_CaffDecreaseAppetite",
+                   "EQ47_CaffLateMakesInsomnia"                          
+) 
+
 
 for (col_name in colsToRecodeExp) { #for each column name in the vector 'cols_to_reverse_code' 
   compiledMaster[,  col_name] <- mapvalues( #apply all the arguments in the curly brackets to 
@@ -97,10 +148,60 @@ for (col_name in colsToRecodeExp) { #for each column name in the vector 'cols_to
   )
 }
 
-View(compiledMaster)
 
-write.csv(compiledMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/compiledMaster_Final.csv")
 
 ################ 4. CWSQ Questionnaire #################################
+
+
+for (col_name in CWSQ887BNames_re) { # using the re-ordered column names for the CWSQ questions in the vector 'CWSQ887BNames_re' (created in DataPrep887B.R)
+  compiledMaster[,  col_name] <- mapvalues( #apply all the arguments in the curly brackets to 
+    # each. So performs map values function for all entries in each of the columns one at a time.
+    compiledMaster[, col_name], 
+    from=c(1, 2, 3, 4, 5),
+    to=c(0, 1, 2, 3, 4)
+  )
+}
+
+
+write.csv(compiledMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/compiledMaster.csv")
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
