@@ -428,8 +428,6 @@ Exit887B <- Exit887B[, -which(names(Exit887B) %in% "email")]
 
 # Reference category is substr_ID
 
-###################################### Solution 1 ##############################################
-
 MasterList <- list(master887B, Exit887B, demog887B, EQ887B, CWSQ887B_reshaped)
 
 
@@ -444,21 +442,76 @@ write.csv (compiledMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/dat
 
 
 
+####################### Swap over CWSQ scores for subjects whose abstinence baseline occurred on the first day 
+
+# Create data for Data Frame
+
+source("~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/DataPrep887B.R")
+
+# So we don't destroy the original
+compMas <- compiledMaster
+
+# preserves the original for reference
+compMasOrig <- compMas
+
+# Creating the lists of column names we want to swap
+
+CWSQSymptoms <- c("drowsy",
+                  "selfconfident",
+                  "yawning",
+                  "alert",
+                  "tiredfatigued",
+                  "content",
+                  "diffconc",
+                  "irritable",
+                  "heavyfeel",
+                  "depressedmood",
+                  "grouchy",
+                  "urgework",
+                  "flulike",
+                  "headache",
+                  "talkative",
+                  "sluggish",
+                  "upsetstomach",
+                  "clearheaded",
+                  "desiresoc",
+                  "energetic",
+                  "nauseavom",
+                  "musclepain",
+                  "discouraged",
+                  "queasy",
+                  "nauseaous",
+                  "vomiting",
+                  "headachey",
+                  "anxious",
+                  "nervous",
+                  "jittery",
+                  "cravingcoffee",
+                  "cravingcaffeine")
+
+CWSQItems <- paste("Q", 1:32, CWSQSymptoms, sep="")
+
+# 2 vectors of all item names for CWSQ for days 1 and 2. It is these that have to be swapped.
+B1Items <- paste("B1", CWSQItems, sep = "")
+
+B2Items <- paste("B2", CWSQItems, sep = "")
 
 
+# Create function for swapping columns around
 
+swapColsCWSQ <- function (colNum) {
+  compMas[colNum, B1Items] <- compMasOrig[colNum, B2Items] 
+  compMas[colNum, B2Items] <- compMasOrig[colNum, B1Items]
+  return(compMas)
+}
 
+# create Boolean vector of which rows/subjects abstained on the first day
+CounterBal <- which(compMas$Counterbalanced_A1st1A2nd0 == 1)
 
+# using that vector as criterion for which columns to swap
+swappedMaster <- swapColsCWSQ(CounterBal)
 
-
-
-
-
-
-
-
-
-
-
+# write new swapped file
+write.csv(swappedMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/swappedMaster.csv")
 
 
