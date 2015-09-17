@@ -2,33 +2,36 @@ setwd("~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Fi
 
 source("~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/DataPrep887B.R")
 
+# Create new dataframe so we don't overwrite old dataframe
+recodedMaster <- swappedMaster
+
 # Recoding values from the qualtrics questionnaires.
 
 ############################# 1. Exit Quesitonnaire is first ##################################
 
 # compliance with baseline
 
-compiledMaster$ComplianceBaseline_Y1N0 <- mapvalues(compiledMaster$ComplianceBaseline_Y1N0, from = c(2,1), to = c(1,0))
+recodedMaster$ComplianceBaseline_Y1N0 <- mapvalues(recodedMaster$ComplianceBaseline_Y1N0, from = c(2,1), to = c(1,0))
 
 # compliance with test
 
-compiledMaster$ComplianceTest_Y1N0 <- mapvalues(compiledMaster$ComplianceTest_Y1N0, from = c(2,1), to = c(1,0))
+recodedMaster$ComplianceTest_Y1N0 <- mapvalues(recodedMaster$ComplianceTest_Y1N0, from = c(2,1), to = c(1,0))
 
 # Do you think procedure differed
 
-compiledMaster$ProcedureDiffered_Y1N0 <- mapvalues(compiledMaster$ProcedureDiffered_Y1N0, from = c(2,1), to = c(0,1))
+recodedMaster$ProcedureDiffered_Y1N0 <- mapvalues(recodedMaster$ProcedureDiffered_Y1N0, from = c(2,1), to = c(0,1))
 
 # Do you think the true dose differed?
 
-compiledMaster$TrueDoseDiffered_Y1N0 <- mapvalues(compiledMaster$TrueDoseDiffered_Y1N0, from = c(2,1), to = c(0,1))
+recodedMaster$TrueDoseDiffered_Y1N0 <- mapvalues(recodedMaster$TrueDoseDiffered_Y1N0, from = c(2,1), to = c(0,1))
 
 ######################## 2. Demographics Questionnaire #######################################
 
 # gender 
 
-compiledMaster$genderM1F0 <- mapvalues(compiledMaster$genderM1F0, from = c(2,1), to = c(0,1))
+recodedMaster$genderM1F0 <- mapvalues(recodedMaster$genderM1F0, from = c(2,1), to = c(0,1))
 
-compiledMaster$genderM1F0 <- factor(compiledMaster$genderM1F0, levels = c(0,1), labels = c("F", "M"), ordered = FALSE)
+recodedMaster$genderM1F0 <- factor(recodedMaster$genderM1F0, levels = c(0,1), labels = c("F", "M"), ordered = FALSE)
 
 # employment
 
@@ -37,53 +40,53 @@ compiledMaster$genderM1F0 <- factor(compiledMaster$genderM1F0, levels = c(0,1), 
 #   varNam <- varNamX
 # }
 # 
-# mapFunct(compiledMaster$edLevel, c(1,2,3,4), c(0,1,2,3))
+# mapFunct(recodedMaster$edLevel, c(1,2,3,4), c(0,1,2,3))
 
-compiledMaster$edLevel <- factor(compiledMaster$edLevel, levels = c(1,2,3,4), labels = c("Primary", "Secondary", "Tertiary", "Other"), ordered = FALSE)
+recodedMaster$edLevel <- factor(recodedMaster$edLevel, levels = c(1,2,3,4), labels = c("Primary", "Secondary", "Tertiary", "Other"), ordered = FALSE)
 
 
 # Marital Status
 
-compiledMaster$maritalStat <- factor(compiledMaster$maritalStat, levels = c(1,2,3,4,5,6), labels = c("Single", "inRelationship", "Married", "Divorced", "Widowed", "Other"), ordered = FALSE)
+recodedMaster$maritalStat <- factor(recodedMaster$maritalStat, levels = c(1,2,3,4,5,6), labels = c("Single", "inRelationship", "Married", "Divorced", "Widowed", "Other"), ordered = FALSE)
 
 # language other than english spoken at home
 
-compiledMaster$langOtherEng <- mapvalues(compiledMaster$langOtherEng, from = c(2,1), to = c(0,1))
+recodedMaster$langOtherEng <- mapvalues(recodedMaster$langOtherEng, from = c(2,1), to = c(0,1))
 
-compiledMaster$langOtherEng <- factor(compiledMaster$langOtherEng, levels = c(0,1), labels = c("No", "Yes"), ordered = FALSE)
+recodedMaster$langOtherEng <- factor(recodedMaster$langOtherEng, levels = c(0,1), labels = c("No", "Yes"), ordered = FALSE)
 
-compiledMaster$langOtherEng
+recodedMaster$langOtherEng
 
 # coffee every day
 
-compiledMaster$coffeeEveryday <- mapvalues(compiledMaster$coffeeEveryday, from = c(1,2), to = c(1,0))
+recodedMaster$coffeeEveryday <- mapvalues(recodedMaster$coffeeEveryday, from = c(1,2), to = c(1,0))
 
-compiledMaster$coffeeEveryday <- factor(compiledMaster$coffeeEveryday, levels = c(0,1), labels = c("No", "Yes"), ordered = FALSE)
+recodedMaster$coffeeEveryday <- factor(recodedMaster$coffeeEveryday, levels = c(0,1), labels = c("No", "Yes"), ordered = FALSE)
 
 # tea every day
 
-compiledMaster$teaEveryday <- mapvalues(compiledMaster$teaEveryday, from = c(1,2), to = c(1,0))
+recodedMaster$teaEveryday <- mapvalues(recodedMaster$teaEveryday, from = c(1,2), to = c(1,0))
 
-compiledMaster$teaEveryday <- factor(compiledMaster$teaEveryday, levels = c(0,1), labels = c("No", "Yes"), ordered = FALSE)
+recodedMaster$teaEveryday <- factor(recodedMaster$teaEveryday, levels = c(0,1), labels = c("No", "Yes"), ordered = FALSE)
 
 # cola every day
 
-compiledMaster$colaEveryday <- mapvalues(compiledMaster$colaEveryday, from = c(1,2), to = c(1,0))
+recodedMaster$colaEveryday <- mapvalues(recodedMaster$colaEveryday, from = c(1,2), to = c(1,0))
 
-compiledMaster$colaEveryday <- factor(compiledMaster$colaEveryday, levels = c(0,1), labels = c("No", "Yes"), ordered = FALSE)
+recodedMaster$colaEveryday <- factor(recodedMaster$colaEveryday, levels = c(0,1), labels = c("No", "Yes"), ordered = FALSE)
 
 # energy drinks every day
 
-compiledMaster$energyDrinksEveryday <- mapvalues(compiledMaster$energyDrinksEveryday, from = c(1,2), to = c(1,0))
+recodedMaster$energyDrinksEveryday <- mapvalues(recodedMaster$energyDrinksEveryday, from = c(1,2), to = c(1,0))
 
-compiledMaster$energyDrinksEveryday <- factor(compiledMaster$energyDrinksEveryday, levels = c(0,1), labels = c("No", "Yes"), ordered = FALSE)
+recodedMaster$energyDrinksEveryday <- factor(recodedMaster$energyDrinksEveryday, levels = c(0,1), labels = c("No", "Yes"), ordered = FALSE)
 
 
 ############################## 3. Expectancy questionnaire ###################################
 
 # what form of caffeine answers pertain to
 
-compiledMaster$EQformOfCaffeine <- factor(compiledMaster$EQformOfCaffeine, levels = c(1,2,3,4,5,6), labels = c("coffee", "softDrink", "tea", "medication", "caffeineInGeneral", "Other"), ordered = FALSE)
+recodedMaster$EQformOfCaffeine <- factor(recodedMaster$EQformOfCaffeine, levels = c(1,2,3,4,5,6), labels = c("coffee", "softDrink", "tea", "medication", "caffeineInGeneral", "Other"), ordered = FALSE)
 
 # recoding items of EQ questionnaire
 
@@ -140,9 +143,9 @@ colsToRecodeExp <-  c("EQformOfCaffeine",
 
 
 for (col_name in colsToRecodeExp) { #for each column name in the vector 'cols_to_reverse_code' 
-  compiledMaster[,  col_name] <- mapvalues( #apply all the arguments in the curly brackets to 
+  recodedMaster[,  col_name] <- mapvalues( #apply all the arguments in the curly brackets to 
     # each. So performs map values function for all entries in each of the columns one at a time.
-    compiledMaster[, col_name], 
+    recodedMaster[, col_name], 
     from=c(1, 2, 3, 4, 5, 6),
     to=c(5, 4, 3, 2, 1, 0)
   )
@@ -154,16 +157,16 @@ for (col_name in colsToRecodeExp) { #for each column name in the vector 'cols_to
 
 
 for (col_name in CWSQ887BNames_re) { # using the re-ordered column names for the CWSQ questions in the vector 'CWSQ887BNames_re' (created in DataPrep887B.R)
-  compiledMaster[,  col_name] <- mapvalues( #apply all the arguments in the curly brackets to 
+  recodedMaster[,  col_name] <- mapvalues( #apply all the arguments in the curly brackets to 
     # each. So performs map values function for all entries in each of the columns one at a time.
-    compiledMaster[, col_name], 
+    recodedMaster[, col_name], 
     from=c(1, 2, 3, 4, 5),
     to=c(0, 1, 2, 3, 4)
   )
 }
 
 
-write.csv(compiledMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/compiledMaster.csv")
+write.csv(recodedMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/recodedMaster.csv")
 
 
 
