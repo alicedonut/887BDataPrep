@@ -193,7 +193,6 @@ EQ887B <- EQ887B[, -which(names(EQ887B) %in% "email")]
 
 
 
-
 ############################# 4. Reading in the withdrawal symptom questionnaire #######################
 
 
@@ -505,6 +504,24 @@ swappedMaster <- swapColsCWSQ(CounterBal)
 
 # write new swapped file
 write.csv(swappedMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/swappedMaster.csv")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
