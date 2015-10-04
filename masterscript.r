@@ -16,7 +16,49 @@ master887B <- read.csv("~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/88
 # Remove the rows that have incomplete data (as defined by whether I have excluded them or not)
 master887B <- master887B[!is.na(master887B$Exclude_Y1N0),]
 
-head(master887B)
+# creates unique 4-character ID from first four letters of email add. As reference for merge later.
+
+master887B$substr_ID <- substr(master887B$Email, 1, 4)
+
+# turn the grouping columns into factors
+
+master887B$Paid_Y1N0 <- factor(master887B$Paid_Y1N0, levels = c(0,1),
+                               labels = c("NotPaid", "Paid"),
+                               ordered = FALSE)
+
+master887B$Counterbalanced_A1st1A2nd0 <- factor(master887B$Counterbalanced_A1st1A2nd0,
+                                                levels = c(0,1),
+                               labels = c("A1st", "A2nd"),
+                               ordered = FALSE)
+
+master887B$Group_Info2_MisInfo1_NoInfo0 <- factor(master887B$Group_Info2_MisInfo1_NoInfo0,
+                                                  levels = c(0, 1, 2),
+                                                  labels = c("NoInfo", "MisInfo", "Infor"),
+                                                  ordered = FALSE)
+
+master887B$ScreenedY1N0 <- factor(master887B$ScreenedY1N0,
+                                  levels = c(1, 0),
+                                  labels = c("Screened", "NotScreened"),
+                                  ordered = F)
+
+master887B$Verbal_CompliedY1N0 <- factor(master887B$Verbal_CompliedY1N0,
+                                  levels = c(1, 0),
+                                  labels = c("complied", "notComplied"),
+                                  ordered = F)
+
+master887B$Verbal_KnowSuspectY1N0 <- factor(master887B$Verbal_KnowSuspectY1N0,
+                                         levels = c(1, 0),
+                                         labels = c("suspected", "didNotSuspect"),
+                                         ordered = F)
+
+master887B$Exclude_Y1N0 <- factor(master887B$Exclude_Y1N0,
+                                            levels = c(1, 0),
+                                            labels = c("exclude", "include"),
+                                            ordered = F)
+
+
+
+
 
 
 ####@@@@@@@@@@@@@@@@@ 2. Demographics questionnaire
@@ -55,38 +97,38 @@ demog887B <- rename(demog887B, c("Q1"="genderM1F0",
                                  "Q41"="typeEnergyDrinks",
                                  "Q28"="numEnergyDrinks",
                                  "Q31"="email"
-                                 ))
+))
 
 # setnames(demog887B, c("Q1", "Q2", "Q3_1"), c("gender", "Age", "Emp_FT")) # uses setnames function from data.table package to reassign names in a similar way as rename function above but with slightly different syntax
 
 
 colsToKeep <- c("genderM1F0", 
-  "age",
-  "emp_FT",
-  "emp_Casual",
-  "emp_Vol",
-  "emp_UnEmp",
-  "emp_Student",
-  "emp_Retired",
-  "emp_Other",
-  "emp_OtherTxt",
-  "edLevel",
-  "maritalStat",
-  "ethnicity",
-  "langOtherEng",
-  "langOtherEng_TEXT",
-  "engFirst",
-  "coffeeEveryday",
-  "numCupsCoffee",
-  "teaEveryday",
-  "numCupsTea",
-  "colaEveryday",
-  "numCola",
-  "typeCola",
-  "energyDrinksEveryday",
-  "typeEnergyDrinks",
-  "numEnergyDrinks",
-  "email"
+                "age",
+                "emp_FT",
+                "emp_Casual",
+                "emp_Vol",
+                "emp_UnEmp",
+                "emp_Student",
+                "emp_Retired",
+                "emp_Other",
+                "emp_OtherTxt",
+                "edLevel",
+                "maritalStat",
+                "ethnicity",
+                "langOtherEng",
+                "langOtherEng_TEXT",
+                "engFirst",
+                "coffeeEveryday",
+                "numCupsCoffee",
+                "teaEveryday",
+                "numCupsTea",
+                "colaEveryday",
+                "numCola",
+                "typeCola",
+                "energyDrinksEveryday",
+                "typeEnergyDrinks",
+                "numEnergyDrinks",
+                "email"
 )
 
 
@@ -122,55 +164,55 @@ skip_second_EQ <- all_content_EQ[-2] # removes second line with unneeded qualtri
 EQ887B <- read.csv(textConnection(skip_second_EQ), header = TRUE, stringsAsFactors = FALSE) # creates new object from the csv file, which has the second line removed
 
 colsToKeepEQ <-  c("EQformOfCaffeine",
-                           "EQformOfCaffeine_TEXT",
-                           "EQ1_PicksMeUp",
-                           "EQ2_BetterConvers",
-                           "EQ3_HelpsAvoidEating",
-                           "EQ4_CaffMakesStress",
-                           "EQ5_CaffImprovesAthl",
-                           "EQ6_CaffLessSleepy",
-                           "EQ7_CaffSuppressHunger",
-                           "EQ8_NoCaffMakesMiser",
-                           "EQ9_CaffImproveMood",
-                           "EQ10_NoCaffAnxious",
-                           "EQ11_CaffMakesJittery",
-                           "EQ12_CaffMakesWorkoutsBetter",
-                           "EQ13_NoCaffMakesWithdrawal",
-                           "EQ14_DontLikeCaffFeel",
-                           "EQ15_NoCaffFeelSick",
-                           "EQ16_CaffIncreaseMotiv",
-                           "EQ17_CaffMoreConf",
-                           "EQ18_CaffThrowsSleep",
-                           "EQ19_CaffMakesNervous",
-                           "EQ20_CaffMakesAlert",
-                           "EQ21_CaffSmallMakesAnxious",
-                           "EQ22_CaffImproveConc",
-                           "EQ23_CaffMakesFriendly",
-                           "EQ24_NoCaffNeedCaffDaily",
-                           "EQ25_CaffMakesSweat",
-                           "EQ26_CaffAllowsMealSkipping",
-                           "EQ27_NoCaffMakesDesire",
-                           "EQ28_CaffMakesDifficult",
-                           "EQ29_CaffMakesIrritable",
-                           "EQ30_CaffHelpsMeWork",
-                           "EQ31_CaffMakesHappy",
-                           "EQ32_NoCaffNoFunction",
-                           "EQ33_CaffMakesIrregularHeartbeat",
-                           "EQ34_OftenCraveCaff",
-                           "EQ35_NoCaffTroubleStartingDay",
-                           "EQ36_CaffUpsetsStomach",
-                           "EQ37_TroubleGivingUpCaff",
-                           "EQ38_CaffLateDisruptsSleep",
-                           "EQ39_CaffHelpsControlWeight",
-                           "EQ40_NoCaffMakesHeadache",
-                           "EQ41_CaffImprovesAttention",
-                           "EQ42_CaffMakesSociable",
-                           "EQ43_CaffMakesExerciseLonger",
-                           "EQ44_CaffHelpsMeGetThroughDay",
-                           "EQ45_CaffMakesMoreEnergy",
-                           "EQ46_CaffDecreaseAppetite",
-                           "EQ47_CaffLateMakesInsomnia",
-                           "email"                           
+                   "EQformOfCaffeine_TEXT",
+                   "EQ1_PicksMeUp",
+                   "EQ2_BetterConvers",
+                   "EQ3_HelpsAvoidEating",
+                   "EQ4_CaffMakesStress",
+                   "EQ5_CaffImprovesAthl",
+                   "EQ6_CaffLessSleepy",
+                   "EQ7_CaffSuppressHunger",
+                   "EQ8_NoCaffMakesMiser",
+                   "EQ9_CaffImproveMood",
+                   "EQ10_NoCaffAnxious",
+                   "EQ11_CaffMakesJittery",
+                   "EQ12_CaffMakesWorkoutsBetter",
+                   "EQ13_NoCaffMakesWithdrawal",
+                   "EQ14_DontLikeCaffFeel",
+                   "EQ15_NoCaffFeelSick",
+                   "EQ16_CaffIncreaseMotiv",
+                   "EQ17_CaffMoreConf",
+                   "EQ18_CaffThrowsSleep",
+                   "EQ19_CaffMakesNervous",
+                   "EQ20_CaffMakesAlert",
+                   "EQ21_CaffSmallMakesAnxious",
+                   "EQ22_CaffImproveConc",
+                   "EQ23_CaffMakesFriendly",
+                   "EQ24_NoCaffNeedCaffDaily",
+                   "EQ25_CaffMakesSweat",
+                   "EQ26_CaffAllowsMealSkipping",
+                   "EQ27_NoCaffMakesDesire",
+                   "EQ28_CaffMakesDifficult",
+                   "EQ29_CaffMakesIrritable",
+                   "EQ30_CaffHelpsMeWork",
+                   "EQ31_CaffMakesHappy",
+                   "EQ32_NoCaffNoFunction",
+                   "EQ33_CaffMakesIrregularHeartbeat",
+                   "EQ34_OftenCraveCaff",
+                   "EQ35_NoCaffTroubleStartingDay",
+                   "EQ36_CaffUpsetsStomach",
+                   "EQ37_TroubleGivingUpCaff",
+                   "EQ38_CaffLateDisruptsSleep",
+                   "EQ39_CaffHelpsControlWeight",
+                   "EQ40_NoCaffMakesHeadache",
+                   "EQ41_CaffImprovesAttention",
+                   "EQ42_CaffMakesSociable",
+                   "EQ43_CaffMakesExerciseLonger",
+                   "EQ44_CaffHelpsMeGetThroughDay",
+                   "EQ45_CaffMakesMoreEnergy",
+                   "EQ46_CaffDecreaseAppetite",
+                   "EQ47_CaffLateMakesInsomnia",
+                   "email"                           
 ) 
 
 
@@ -298,8 +340,8 @@ CWSQ887B <- ddply(CWSQ887B, # specifies data frame we are looking at
                   "substr_ID", # specifies the variable which we will be subsetting by
                   
                   function(sub_rows) { # creates a function called sub_rows to apply to each subset within the id_code column of the dataframe CWSQ887B. Here the 'sub-rows' argument stands in for the dataframe CWSQ887B
-  sub_rows$survey_num <- order(sub_rows$testtime) # creates a new column called survey_num in which each row is an order number for the place of that row within each subset of the 'id_code' column. The order numbers in this case are assigned based on the criteria 'date-time in column V8 of dataframe CWSQ887B' (Remember above on line 29 we specified this column as a date-time)
-  return(sub_rows) # returns the newly augmented CWSQ887B
+                    sub_rows$survey_num <- order(sub_rows$testtime) # creates a new column called survey_num in which each row is an order number for the place of that row within each subset of the 'id_code' column. The order numbers in this case are assigned based on the criteria 'date-time in column V8 of dataframe CWSQ887B' (Remember above on line 29 we specified this column as a date-time)
+                    return(sub_rows) # returns the newly augmented CWSQ887B
                   }
 )
 
@@ -386,7 +428,7 @@ colsToKeepExit <- c("DurationCaff",
                     "TrueDoseDiffered_Y1N0",
                     "TrueDoseDiffered_TEXT",
                     "email"                    
-                    )
+)
 
 
 # changes column names 
@@ -499,6 +541,11 @@ swappedMaster <- swapColsCWSQ(CounterBal)
 recodedMaster <- swappedMaster
 
 # Recoding values from the qualtrics questionnaires.
+
+#######
+
+
+
 
 ############################# 1. Exit Quesitonnaire is first ##################################
 
@@ -669,14 +716,14 @@ for (col_name in CWSQ887BNames_re) { # using the re-ordered column names for the
 
 # creates a sort of mini data frame where every element in one column is matched with every element in the other
 colsToRev <- expand.grid(testDays = c(paste("B", 1:2, sep=""), paste("T", 1:9, sep="")),  
-                             itemsToReverse = c("Q2selfconfident",
-                                                "Q4alert",
-                                                "Q6content",
-                                                "Q12urgework",
-                                                "Q15talkative",
-                                                "Q18clearheaded",
-                                                "Q19desiresoc",
-                                                "Q20energetic"))
+                         itemsToReverse = c("Q2selfconfident",
+                                            "Q4alert",
+                                            "Q6content",
+                                            "Q12urgework",
+                                            "Q15talkative",
+                                            "Q18clearheaded",
+                                            "Q19desiresoc",
+                                            "Q20energetic"))
 
 
 # this then pastes those two columns together.
@@ -690,9 +737,9 @@ recodedRevMaster <- recodedMaster
 # now we run through the columns we specified with a for loop, remapping values (reverse coding in this case)
 for (columnN in colsToReverse) {
   recodedRevMaster[, columnN] <- mapvalues(recodedRevMaster[, columnN],
-                                                  from = c(0, 1, 2, 3, 4),
-                                                  to = c(4, 3, 2, 1, 0)
-                                                 )
+                                           from = c(0, 1, 2, 3, 4),
+                                           to = c(4, 3, 2, 1, 0)
+  )
 }
 
 
@@ -706,17 +753,17 @@ for (columnN in colsToReverse) {
 factoredMaster <- recodedRevMaster
 
 EQWithdrawalItems <-  c("EQ8_NoCaffMakesMiser",
-                   "EQ10_NoCaffAnxious",
-                   "EQ13_NoCaffMakesWithdrawal",
-                   "EQ15_NoCaffFeelSick",
-                   "EQ24_NoCaffNeedCaffDaily",
-                   "EQ27_NoCaffMakesDesire",
-                   "EQ32_NoCaffNoFunction",
-                   "EQ34_OftenCraveCaff",
-                   "EQ35_NoCaffTroubleStartingDay",
-                   "EQ37_TroubleGivingUpCaff",
-                   "EQ40_NoCaffMakesHeadache",
-                   "EQ44_CaffHelpsMeGetThroughDay"                        
+                        "EQ10_NoCaffAnxious",
+                        "EQ13_NoCaffMakesWithdrawal",
+                        "EQ15_NoCaffFeelSick",
+                        "EQ24_NoCaffNeedCaffDaily",
+                        "EQ27_NoCaffMakesDesire",
+                        "EQ32_NoCaffNoFunction",
+                        "EQ34_OftenCraveCaff",
+                        "EQ35_NoCaffTroubleStartingDay",
+                        "EQ37_TroubleGivingUpCaff",
+                        "EQ40_NoCaffMakesHeadache",
+                        "EQ44_CaffHelpsMeGetThroughDay"                        
 ) 
 
 
@@ -1144,24 +1191,6 @@ T9Names <- paste("T9", CWSQ887Nom, sep="")
 factoredMaster$T9Total <- rowSums(factoredMaster[, T9Names], na.rm = F) 
 
 
-write.csv(factoredMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/887BMaster.csv")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+write.csv(factoredMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/887BMaster.csv", row.names = F)
 
 
