@@ -1191,6 +1191,8 @@ T9Names <- paste("T9", CWSQ887Nom, sep="")
 factoredMaster$T9Total <- rowSums(factoredMaster[, T9Names], na.rm = F) 
 
 
-write.csv(factoredMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/887BMaster.csv")
+
+write.csv(factoredMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/887BMaster.csv", row.names = F)
+
 
 
