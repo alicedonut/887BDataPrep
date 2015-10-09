@@ -1205,6 +1205,8 @@ factoredMaster <- factoredMaster[order(factoredMaster$ID),]
 
 
 # write to data folder
+
 write.csv(factoredMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/887BMaster.csv", row.names = F)
+
 
 
