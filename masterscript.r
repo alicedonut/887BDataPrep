@@ -11,6 +11,7 @@ library(data.table)
 
 
 ##################### 1. Master file, taken from the xlsx master file. We want to turn it into an object we can attach.
+
 master887B <- read.csv("~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/Caff887B.csv")
 
 # Remove the rows that have incomplete data (as defined by whether I have excluded them or not)
@@ -56,6 +57,10 @@ master887B$Exclude_Y1N0 <- factor(master887B$Exclude_Y1N0,
                                             labels = c("exclude", "include"),
                                             ordered = F)
 
+# get rid of superfluous X column which now gets added for some reason
+
+master887B <- master887B[, -which(names(master887B) %in% "X")]
+
 
 
 
@@ -69,7 +74,11 @@ skip_second_Demog <- all_content_Demog[-2] # removes second line with unneeded q
 
 demog887B <- read.csv(textConnection(skip_second_Demog), header = TRUE, stringsAsFactors = FALSE) # creates new object from the csv file, which has the second line removed
 
+
 # this uses the rename function in the plyr package to rename the variables
+
+# detach("package:dplyr", unload = T) # this plyr command won't work if dplyr is also active
+
 demog887B <- rename(demog887B, c("Q1"="genderM1F0",
                                  "Q2"="age",
                                  "Q3_1"="emp_FT",
@@ -1205,8 +1214,28 @@ factoredMaster <- factoredMaster[order(factoredMaster$ID),]
 
 
 # write to data folder
-
 write.csv(factoredMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/887BMaster.csv", row.names = F)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
