@@ -29,7 +29,7 @@ master887B$Paid_Y1N0 <- factor(master887B$Paid_Y1N0, levels = c(0,1),
 
 master887B$Counterbalanced_A1st1A2nd0 <- factor(master887B$Counterbalanced_A1st1A2nd0,
                                                 levels = c(0,1),
-                               labels = c("A1st", "A2nd"),
+                               labels = c("A2nd", "A1st"),
                                ordered = FALSE)
 
 master887B$Group_Info2_MisInfo1_NoInfo0 <- factor(master887B$Group_Info2_MisInfo1_NoInfo0,
@@ -300,7 +300,7 @@ CWSQN <- c("drowsy",
 # creates the vector 
 CWSQ887Names <- paste("Q", 1:33, CWSQN, sep="")
 
-# change the relevant columns, which now have column names as you want them to appear in the composite file
+# change the relevant columns, which now have column names as you want them to appear in the composite file (in essence this just starts to Q count at 1 instead of 2)
 setnames(CWSQ887B, paste("Q", 2:34, sep=""), CWSQ887Names)
 
 setnames(CWSQ887B, "V8", "testtime") # changes the name of the data column used to sort the rows for each participant into chronological order to something more intuitive than V8
@@ -477,6 +477,10 @@ MasterList <- list(master887B, Exit887B, demog887B, EQ887B, CWSQ887B_reshaped)
 
 compiledMaster <- Reduce( function (...) merge(..., by = "substr_ID", all = F), MasterList)
 
+#write.csv(compiledMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/compiledMaster.csv", row.names = F)
+
+
+
 
 ####################### Swap over CWSQ scores for subjects whose abstinence baseline occurred on the first day 
 
@@ -528,33 +532,38 @@ B1Items <- c("B1testtime", paste("B1", CWSQItems, sep = ""))
 
 B2Items <- c("B2testtime", paste("B2", CWSQItems, sep = ""))
 
-B2Items
-
 
 # Create function for swapping columns around
 
-swapColsCWSQ <- function (colNum) {
-  compMas[colNum, B1Items] <- compMasOrig[colNum, B2Items] 
-  compMas[colNum, B2Items] <- compMasOrig[colNum, B1Items]
+swapColsCWSQ <- function (rowNum) {
+  compMas[rowNum, B1Items] <- compMasOrig[rowNum, B2Items] 
+  compMas[rowNum, B2Items] <- compMasOrig[rowNum, B1Items]
   return(compMas)
 }
 
 # create Boolean vector of which rows/subjects abstained on the first day
-CounterBal <- which(compMas$Counterbalanced_A1st1A2nd0 == 1)
+CounterBal <- which(compMas$Counterbalanced_A1st1A2nd0 == "A1st")
 
-# using that vector as criterion for which columns to swap. TNow we execute the function which swaps the columns
+CounterBal
+
+# using that vector as criterion for which columns to swap. Now we execute the function which swaps the columns
 swappedMaster <- swapColsCWSQ(CounterBal)
+
+
+
+# write.csv(swappedMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/swappedMaster.csv")
 
 
 # Create new dataframe so we don't overwrite old dataframe
 recodedMaster <- swappedMaster
 
+
+
+
+
+
+
 # Recoding values from the qualtrics questionnaires.
-
-#######
-
-
-
 
 ############################# 1. Exit Quesitonnaire is first ##################################
 
@@ -1213,29 +1222,19 @@ factoredMaster <-  factoredMaster[, c(2,3,4,1,7,6,5,8,9, remainderCols )]
 factoredMaster <- factoredMaster[order(factoredMaster$ID),]
 
 
+# rename columns with visit dates entered manually so they are agnostic to baseline status
+
+visitCols <- expand.grid("DateTime_T", 1:4, c("a","b"))
+
+visitColNames <- paste(visitCols$Var1, visitCols$Var2, visitCols$Var3, sep = "")
+
+visitColNames <- sort(visitColNames)
+
+setnames(factoredMaster, c(paste("DateTime_B", 1:2, sep=""), visitColNames, "DateTime_T5"), c(paste("Visit", 1:11)))
+
+
+
 # write to data folder
 write.csv(factoredMaster, "~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/887BMaster.csv", row.names = F)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
