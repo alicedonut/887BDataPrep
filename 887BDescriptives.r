@@ -2,27 +2,29 @@ setwd("~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Fi
 
 source("~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/887BMasterScript.R")
 
+descriptiveMaster <- read.csv("~/Dropbox/PhD/Placebo/Experiments/Experiment887B/data/887B_R_Qualtrics_Files/887BMaster.csv")
+
 # means by group for morning and afternoon test sessions
 
 # morning
-morningGroupMeans887B <- aggregate(cbind(factoredMaster$T1Total, 
-                          factoredMaster$T3Total,
-                          factoredMaster$T5Total,
-                          factoredMaster$T7Total,
-                          factoredMaster$T9Total) ~ factoredMaster$Group_Info2_MisInfo1_NoInfo0, FUN = mean)
+morningGroupMeans887B <- aggregate(cbind(descriptiveMaster$T1Total, 
+                                         descriptiveMaster$T3Total,
+                                         descriptiveMaster$T5Total,
+                                         descriptiveMaster$T7Total,
+                                         descriptiveMaster$T9Total) ~ descriptiveMaster$Group_Info2_MisInfo1_NoInfo0, FUN = mean)
 
 # afternoon
-arvoGroupMeans887B <- aggregate(cbind(factoredMaster$T2Total, 
-                                         factoredMaster$T4Total,
-                                         factoredMaster$T6Total,
-                                         factoredMaster$T8Total) ~ factoredMaster$Group_Info2_MisInfo1_NoInfo0, FUN = mean)
+arvoGroupMeans887B <- aggregate(cbind(descriptiveMaster$T2Total, 
+                                      descriptiveMaster$T4Total,
+                                      descriptiveMaster$T6Total,
+                                      descriptiveMaster$T8Total) ~ descriptiveMaster$Group_Info2_MisInfo1_NoInfo0, FUN = mean)
 
-arvoGroupMeans887B
 
 # rows using ddply from plyr package. subsets factored master dataset according to group level, then applies nrow function to each subset.
 
-groupRows887B <- ddply(factoredMaster, "Group_Info2_MisInfo1_NoInfo0", nrow)
+groupRows887B <- ddply(descriptiveMaster, "Group_Info2_MisInfo1_NoInfo0", nrow)
 
+groupRows887B
 
 # changes names of object groupRows887B using setnames function from data.table package. Could also use rename from plyr
 
@@ -45,11 +47,11 @@ colnames(morningGroupMeans887B) <- c("Group",
 require(tidyr)
 
 longGroupsMorning887B <- gather(morningGroupMeans887B, Day, totalScore,
-                         Test1_Morning:
-                         Test2_Morning:
-                         Test3_Morning:
-                         Test4_Morning:
-                         Test5_Morning)
+                                Test1_Morning:
+                                  Test2_Morning:
+                                  Test3_Morning:
+                                  Test4_Morning:
+                                  Test5_Morning)
 
 
 # Now we graph it
@@ -58,7 +60,7 @@ require(ggplot2)
 
 
 par(mgp = c(1,1,1))
-pGroup2 <- ggplot(data = longGroupsMorning887B, aes(x = Day, y = totalScore, group = Group, shape = Group)) +
+pGroupMorn <- ggplot(data = longGroupsMorning887B, aes(x = Day, y = totalScore, group = Group, shape = Group)) +
   geom_line(aes(linetype = Group), size = 1) +
   geom_point(size = 5, fill = "white") +
   expand_limits(y = 0) +
@@ -83,57 +85,56 @@ legendText <- element_text(face = "plain", color = "black", size = 14)
 
 
 #Call up pGroup2 (which is the variable assigned to the graph) and add fix-ups
-pGroup2 + theme(title = titleFont, 
-                axis.title = titleFont,
-                axis.title.x = titleFontX,
-                axis.text  = axisTextFont,
-                axis.text.x = axisTextFontX,
-                legend.title = legendTitle,
-                legend.text = legendText,
-                ##### remove #'s to put legend inside area of graph, otherwise will automatically create legend
-                #                legend.justification = c(0,0), #anchors legend in bottom left
-                #                legend.position = c(.7,.1), # uses anchor point to place legend
-                panel.grid.minor = element_blank(), #gets rid of gridlines
-                panel.grid.major = element_blank())  #+ #(uncomment '+' if you want to add the annotate argument below) 
-  
-  
-  # adds text
-  annotate("text", x = 1:7,
-           y = c(17, 36, 40, 36, 37, 44.5, 43),
-           label = c("italic(p) == .63", # these are plotmath arguments, p in italics 
-                     "italic(p) == .61",
-                     "italic(p) == .72",
-                     "italic(p) == .30",
-                     "italic(p) == .46",
-                     "italic(p) == .80",
-                     "italic(p) == .29"),
-           size = 4.2,
-           family = "Helvetica", # specifies the font type 
-           parse = T) # the parse = TRUE argument allows you to add plotmath
-# arguments for mathematical notation, such as the italics
+pGroupMorn + theme(title = titleFont, 
+                   axis.title = titleFont,
+                   axis.title.x = titleFontX,
+                   axis.text  = axisTextFont,
+                   axis.text.x = axisTextFontX,
+                   legend.title = legendTitle,
+                   legend.text = legendText,
+                   ##### remove #'s to put legend inside area of graph, otherwise will automatically create legend
+                   #                legend.justification = c(0,0), #anchors legend in bottom left
+                   #                legend.position = c(.7,.1), # uses anchor point to place legend
+                   panel.grid.minor = element_blank(), #gets rid of gridlines
+                   panel.grid.major = element_blank())  #+ #(uncomment '+' if you want to add the annotate argument below) 
 
 
-dev.print(cairo_ps, "image.eps") #### sends open plot window to current working directory
+#   # adds text
+#   annotate("text", x = 1:7,
+#            y = c(17, 36, 40, 36, 37, 44.5, 43),
+#            label = c("italic(p) == .63", # these are plotmath arguments, p in italics 
+#                      "italic(p) == .61",
+#                      "italic(p) == .72",
+#                      "italic(p) == .30",
+#                      "italic(p) == .46",
+#                      "italic(p) == .80",
+#                      "italic(p) == .29"),
+#            size = 4.2,
+#            family = "Helvetica", # specifies the font type 
+#            parse = T) # the parse = TRUE argument allows you to add plotmath
+# # arguments for mathematical notation, such as the italics
+
+
+#dev.print(cairo_ps, "image.eps") #### sends open plot window to current working directory
 
 ###################### Graph Afternoon Group Means ###############################
 #--------------------------------------------------------------------------------#
 # now lets reassign column names
 colnames(arvoGroupMeans887B) <- c("Group",
-                                     "Test1_Afternoon",
-                                     "Test2_Afternoon",
-                                     "Test3_Afternoon",
-                                     "Test4_Afternoon")
+                                  "Test1_Afternoon",
+                                  "Test2_Afternoon",
+                                  "Test3_Afternoon",
+                                  "Test4_Afternoon")
 
-View(arvoGroupMeans887B)
 # Now we need to turn it into a long-form dataframe so we can graph it
 
 require(tidyr)
 
 longGroupsArvo887B <- gather(arvoGroupMeans887B, Day, totalScore,
-                                  Test1_Afternoon:
-                                  Test2_Afternoon:
-                                  Test3_Afternoon:
-                                  Test4_Afternoon)
+                             Test1_Afternoon:
+                               Test2_Afternoon:
+                               Test3_Afternoon:
+                               Test4_Afternoon)
 
 
 # Now we graph it
@@ -142,7 +143,7 @@ require(ggplot2)
 
 
 par(mgp = c(1,1,1))
-pGroup2 <- ggplot(data = longGroupsArvo887B, aes(x = Day, y = totalScore, group = Group, shape = Group)) +
+pGroupArvo <- ggplot(data = longGroupsArvo887B, aes(x = Day, y = totalScore, group = Group, shape = Group)) +
   geom_line(aes(linetype = Group), size = 1) +
   geom_point(size = 5, fill = "white") +
   expand_limits(y = 0) +
@@ -167,34 +168,210 @@ legendText <- element_text(face = "plain", color = "black", size = 14)
 
 
 #Call up pGroup2 (which is the variable assigned to the graph) and add fix-ups
-pGroup2 + theme(title = titleFont, 
-                axis.title = titleFont,
-                axis.title.x = titleFontX,
-                axis.text  = axisTextFont,
-                axis.text.x = axisTextFontX,
-                legend.title = legendTitle,
-                legend.text = legendText,
-                ##### remove #'s to put legend inside area of graph, otherwise will automatically create legend
-                #                legend.justification = c(0,0), #anchors legend in bottom left
-                #                legend.position = c(.7,.1), # uses anchor point to place legend
-                panel.grid.minor = element_blank(), #gets rid of gridlines
-                panel.grid.major = element_blank())  #+ #(uncomment '+' if you want to add the annotate argument below) 
+pGroupArvo + theme(title = titleFont, 
+                   axis.title = titleFont,
+                   axis.title.x = titleFontX,
+                   axis.text  = axisTextFont,
+                   axis.text.x = axisTextFontX,
+                   legend.title = legendTitle,
+                   legend.text = legendText,
+                   ##### remove #'s to put legend inside area of graph, otherwise will automatically create legend
+                   #                legend.justification = c(0,0), #anchors legend in bottom left
+                   #                legend.position = c(.7,.1), # uses anchor point to place legend
+                   panel.grid.minor = element_blank(), #gets rid of gridlines
+                   panel.grid.major = element_blank())  #+ #(uncomment '+' if you want to add the annotate argument below) 
 
 
 # adds text
-annotate("text", x = 1:7,
-         y = c(17, 36, 40, 36, 37, 44.5, 43),
-         label = c("italic(p) == .63", # these are plotmath arguments, p in italics 
-                   "italic(p) == .61",
-                   "italic(p) == .72",
-                   "italic(p) == .30",
-                   "italic(p) == .46",
-                   "italic(p) == .80",
-                   "italic(p) == .29"),
-         size = 4.2,
-         family = "Helvetica", # specifies the font type 
-         parse = T) # the parse = TRUE argument allows you to add plotmath
-# arguments for mathematical notation, such as the italics
+# annotate("text", x = 1:7,
+#          y = c(17, 36, 40, 36, 37, 44.5, 43),
+#          label = c("italic(p) == .63", # these are plotmath arguments, p in italics 
+#                    "italic(p) == .61",
+#                    "italic(p) == .72",
+#                    "italic(p) == .30",
+#                    "italic(p) == .46",
+#                    "italic(p) == .80",
+#                    "italic(p) == .29"),
+#          size = 4.2,
+#          family = "Helvetica", # specifies the font type 
+#          parse = T) # the parse = TRUE argument allows you to add plotmath
+# # arguments for mathematical notation, such as the italics
 
 
-dev.print(cairo_ps, "image.eps") #### sends open plot window to current working directory
+# dev.print(cairo_ps, "image.eps") #### sends open plot window to current working directory
+
+#-------------------------------------------------------------------------------#
+######################### Testing Assumptions ####################################
+#-------------------------------------------------------------------------------#
+
+# First create a list of all the column names you need
+
+visits <- c(paste("B", 1:2, sep=""), paste("T", 1:9, sep=""))
+
+colTots <- paste(visits, "Total",  sep="")
+
+drowsyTots <- paste(visits, "Drowsy", "Fac", sep="")
+decAlertTots <- paste(visits, "DecAlert", "Fac", sep="")
+moodTots <- paste(visits, "Mood", "Fac", sep="")
+nauseaTots <- paste(visits, "DecreasedSocMotiv", "Fac", sep="")
+flulikeTots <- paste(visits, "FluLike", "Fac", sep="")
+headacheTots <- paste(visits, "Headache", "Fac", sep="")
+acuteTots <- paste(visits, "Acute", "Fac", sep="")
+cravingTots <- paste(visits, "Craving", "Fac", sep="")
+
+
+######################### 1st assumption of ANOVA: No outliers #################
+
+# 1a: Checking boxplots. Looking at the boxplots
+
+require(RColorBrewer)
+
+par(mfrow = c(1,1))
+boxplot(descriptiveMaster[, drowsyTots], # add list of columns from above list here to check outliers
+        horizontal = TRUE, 
+        col = brewer.pal(7, "PuBu"),
+        las = 2,
+        cex.axis = 0.6)
+
+
+# 1b: look at boxplots by group
+
+par(mfrow = c(2,4))
+boxplot(descriptiveMaster$T1Total ~ descriptiveMaster$Group_Info2_MisInfo1_NoInfo0, main = "T1")
+boxplot(descriptiveMaster$T2Total ~ descriptiveMaster$Group_Info2_MisInfo1_NoInfo0, main = "T2")
+boxplot(descriptiveMaster$T3Total ~ descriptiveMaster$Group_Info2_MisInfo1_NoInfo0, main = "T3")
+boxplot(descriptiveMaster$T4Total ~ descriptiveMaster$Group_Info2_MisInfo1_NoInfo0, main = "T4")
+boxplot(descriptiveMaster$T5Total ~ descriptiveMaster$Group_Info2_MisInfo1_NoInfo0, main = "T5")
+boxplot(descriptiveMaster$T6Total ~ descriptiveMaster$Group_Info2_MisInfo1_NoInfo0, main = "T6")
+boxplot(descriptiveMaster$T7Total ~ descriptiveMaster$Group_Info2_MisInfo1_NoInfo0, main = "T7")
+boxplot(descriptiveMaster$T8Total ~ descriptiveMaster$Group_Info2_MisInfo1_NoInfo0, main = "T8")
+
+# we want to check the studentised residuals
+T1lm <- lm(descriptiveMaster$T1Total ~ descriptiveMaster$Group_Info2_MisInfo1_NoInfo0)
+t1Res <- resid(T1lm) # these are unstandardised residuals
+t1StdRes <- rstandard(T1lm) #these are studentised residuals. These are standardised values of how how many SDs each score is for the prdicted score. You want to check through these for each DV and look for any that are >3 sd
+
+# 1c: Look at an aq.plot
+
+# aq.plot allows you to identify multivariate outliers by plotting the ordered square robust Mahalanobis distances of the observations against the empirical function of the MD-squared. The function produces four graphs and returns a boolean vector identifying the outliers.
+
+# The function aq.plot plots the ordered squared robust Mahalanobis distances of the observations against the empirical distribution function of the $MD^2_i$. The distance calculations are based on the MCD estimator. For outlier detection two different methods are used. The first one marks observations as outliers if they exceed a certain quantile of the chi-squared distribution. The second is an adaptive procedure searching for outliers specifically in the tails of the distribution, beginning at a certain chisq-quantile (see Filzmoser et al., 2005). The function behaves differently depending on the dimension of the data.  If the data is more than two-dimensional the data are projected on the first two robust principal components.
+
+require(mvoutlier)
+
+outliers887B <- aq.plot(descriptiveMaster[, colTots])
+
+outliers887B
+
+############################## 2nd assumption of ANOVA: normality #######################
+
+# 2a: Q-Plot
+
+#do a qqplot of standardised residuals (we created this variable above remember. Need to do this for all the DVs)
+
+par(mfcol = c(1,1))
+
+qqnorm(t1StdRes)
+qqline(t1StdRes)
+
+
+# 2b: Shapiro-Wilk test. If the 'Sig.' level is less than .05 then the data for that group is not normally distributed. Shapiro-Wilk tests the Null hypothesis that the data is normally distributed So you WANT this statistic to be non-significant.
+
+
+shapiro.test(descriptiveMaster$T1Total)
+
+# 2c: multivariate normality
+
+require(mvnormtest)
+
+# use the function mshapiro.test to test for multivariate normality
+
+#if we have p x 1 multivariate normal random vector 'X ~ N(mu, Sum) then the squared Mahanalobis distance between x and Mu is going to be chi-square distributed with p degrees of freedom. We can use this fact to construct a q-plot to assess multivariate normality
+
+par(mfrow = c(1,1))
+multVar <- as.matrix(descriptiveMaster[, colTots]) # n x p numeric matrix
+center <- colMeans(multVar) # centroid
+n <- nrow(multVar); p <- ncol(multVar); cov <- cov(multVar);
+d <- mahalanobis(multVar,center,cov) # distances
+View(multVar)
+qqplot(qchisq(ppoints(n),df=p),d,
+       main="QQ Plot Assessing Multivariate Normality",
+       ylab="Mahalanobis D2")
+abline(a=0,b=1)
+
+
+#################### 3rd Assumption of ANOVA: Homogeneity of variance ###############
+
+#The assumption of mixed ANOVA is that there are equal variances between the levels of the between-subjects factor at each level of the within-Ss factor. If the variances are unequal it can affect the Type 1 error rate. For this we use tests of equality of variances. For all these tests, the null hypothesis is that all populations variances are equal; the alternative hypothesis is that at least two of them differ. If it is  <.05 then there is a significant difference in variance between-groups. We want a non-significant value
+
+
+
+
+# 3a: Bartlett's test
+
+# If the data is normally distributed, this is the best test to use. It is sensitive to data which is not non-normally distribution; it is more likely to return a “false positive” when the data is non-normal.
+
+bartlett.test(B1Total ~ Group_Info2_MisInfo1_NoInfo0, data = descriptiveMaster)
+
+
+# for two IVS you need to include an interaction function, otherwise the degrees of freedom will be wrong
+
+bartlett.test(B1Total ~ interaction(Group_Info2_MisInfo1_NoInfo0, Paid_Y1N0),
+              data = descriptiveMaster)
+
+# 3b: Levene's test 
+
+# this is more robust to departures from normality than Bartlett’s test.
+
+require(car)
+
+leveneTest(B1Total ~ Group_Info2_MisInfo1_NoInfo0, data = descriptiveMaster)
+
+# you can also do a multiple-IV Levene test, but we don't need a separate function
+
+leveneTest(B1Total ~ Group_Info2_MisInfo1_NoInfo0*Paid_Y1N0, data = descriptiveMaster)
+
+
+# 3c: fligner-killeen test
+
+# this is a non-parametric test which is very robust against departures from normality.
+
+fligner.test(B1Total ~ Group_Info2_MisInfo1_NoInfo0, data = descriptiveMaster)
+
+# interactions are the same format as bartlett's
+
+fligner.test(B1Total ~ interaction(Group_Info2_MisInfo1_NoInfo0, Paid_Y1N0),
+             data = descriptiveMaster)
+
+
+# 3d: hov plot
+
+require(HH)
+
+# The hovPlot( ) function in the HH package provides a graphic test of homogeneity of variances based on Brown-Forsyth. In the following example, dependent variable is numeric and predictor is a grouping factor. Note that predictor must be of type factor
+
+# to perform hov procedure must have a grouping variable which is a factor
+
+hov(B2Total ~ Group_Info2_MisInfo1_NoInfo0, data = descriptiveMaster)
+
+hovPlot(B2Total ~ Group_Info2_MisInfo1_NoInfo0, data = descriptiveMaster)
+
+#################### Assumption 4: homogeneity of covariance ###########################
+
+# we test for homogeneity of covariance using box's test of covariance matrices. If the sign. level of this test is p <.001 then the covariances are not equal. If p >.001 then covariances are equal and assumption of homogeneity of covariance is satisfied. Note: there needs to be more observations per level of the grouping variable than there repeated measures variables. If there are less you'ss get an error message
+
+require(biotools)
+
+boxVar887B <- descriptiveMaster[, c(colTots, "Group_Info2_MisInfo1_NoInfo0")] #creates object with all DVs and group factor IV
+
+
+
+boxM(boxVar887B[, -length(boxVar887B)], boxVar887B[,which(names(boxVar887B) %in% "Group_Info2_MisInfo1_NoInfo0")]) # data must be dataframe of ONLY numeric, but grouping must be factor, so the dataframe considered by the BoxM function has the group factor subtracted for the first argument, but then ONLY that factor for the following argument.
+
+#---------------------------------------------------------------------------------------------#
+################## Assumption 5: Sphericity ####################################################
+
+# Sphericity is, in a nutshell, that the variances of the differences between the repeated measurements should be about the same.
+
+
+
