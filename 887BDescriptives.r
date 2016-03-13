@@ -373,5 +373,5 @@ boxM(boxVar887B[, -length(boxVar887B)], boxVar887B[,which(names(boxVar887B) %in%
 
 # Sphericity is, in a nutshell, that the variances of the differences between the repeated measurements should be about the same.
 
-
+# haven't written anything
 
